@@ -1,0 +1,11 @@
+oving03.zip
+
+# Eclipse stuff #
+.metadata/*
+*.project
+*/.settings/*
+*.classpath
+
+
+# Compiled source #
+*.class
