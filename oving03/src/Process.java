@@ -158,5 +158,23 @@ public class Process implements Constants
 		this.endTime = clock;
 		this.notifyAll();
 	}
+	/**
+	 * Call this method when the process enters the CPU
+	 * @param clock The current time (in ms).
+	 */
+	public void enterCPU(long clock) {
+		this.timeSpentInReadyQueue += clock - timeOfLastEvent;
+		this.timeOfLastEvent = clock;
+		notifyAll();
+	}
+	/**
+	 * Call this method when the process enters the CPU queue.
+	 * @param clock The current time (in ms).
+	 */
+	public void enterCPUQueue(long clock) {
+		this.nofTimesInIoQueue++;
+		timeOfLastEvent = clock;
+		notifyAll();
+	}
 	
 }
