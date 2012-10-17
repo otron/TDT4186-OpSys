@@ -44,10 +44,13 @@ public class Process implements Constants
 	private long nofTimesInIoQueue = 0;
 
 	/** The global time of the last event involving this process */
-	
-	
-	
 	private long timeOfLastEvent;
+	
+	/** The amount of time time (in ms) it takes for this process to start up after being given the CPU */
+	private long startUpTime;
+	
+	/** The time this process ended */
+	private long endTime;
 
 	/**
 	 * Creates a new process with given parameters. Other parameters are randomly
@@ -143,6 +146,17 @@ public class Process implements Constants
 		return this.cpuTimeNeeded;
 	}
 	
-	
+	/**
+	 * This function is called when the process leaves the CPU.
+	 * @param clock The time when this process leaves the CPU.
+	 */
+	public void leaveCPU(long clock) {
+		this.timeSpentInCpu += clock - this.timeOfLastEvent;
+		this.cpuTimeNeeded -= clock - this.timeOfLastEvent;
+		this.timeToNextIoOperation -= clock - this.timeOfLastEvent;
+		this.timeOfLastEvent = clock;
+		this.endTime = clock;
+		this.notifyAll();
+	}
 	
 }
