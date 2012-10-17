@@ -25,5 +25,17 @@ public class IO {
 		this.ioQueue = IOQueue;
 		this.ioWait = IOWait;
 	}
+	
+	/**
+	 * hands over I/O access to the process that's first in the queue.
+	 * @return returns the now-active process.
+	 */
+	public Process begin() {
+		if (this.ioQueue.isEmpty())
+			return null;
+		this.activeProc = (Process) this.ioQueue.removeNext();
+		gui.setIoActive(this.activeProc);
+		return this.activeProc;
+	}
 
 }
