@@ -1,3 +1,5 @@
+import java.util.Random;
+
 
 public class IO {
 	/** yo yo wat up some stats yo */
@@ -10,6 +12,7 @@ public class IO {
 	/** The process which currently has right of I/O */
 	private Process activeProc = null;
 	/** the time to wait (in ms) until the I/O becomes available */
+	private long avgioWait;
 	private long ioWait;
 	
 	/**
@@ -17,13 +20,13 @@ public class IO {
 	 * @param statistics
 	 * @param gui
 	 * @param IOQueue
-	 * @param IOWait
+	 * @param avgIOWait
 	 */
-	public IO(Statistics statistics, Gui gui, Queue IOQueue, long IOWait) {
+	public IO(Statistics statistics, Gui gui, Queue IOQueue, long avgIOWait) {
 		this.stats = statistics;
 		this.gui = gui;
 		this.ioQueue = IOQueue;
-		this.ioWait = IOWait;
+		this.ioWait = avgIOWait;
 	}
 	
 	/**
@@ -61,6 +64,21 @@ public class IO {
 		this.gui.setIoActive((this.activeProc = null));
 		return proc;
 	}
+	/**
+	 * generates a random time interval for when the IO next becomes available, averaged around the avgIOWait time.
+	 * @return the time (in ms) until the IO becomes available.
+	 */
+	public long getIOTime() {
+		if (this.ioWait <= 0) {
+			Random rng = new Random();
+			this.ioWait = (long) (rng.nextDouble() * rng.nextDouble() * 2 * avgioWait);
+			return this.ioWait;
+		} else
+			return ioWait;
+	}
 	
+	public void updateTime(long time) {
+		// TO-DO: wait until statistics.java is done
+	}
 
 }
