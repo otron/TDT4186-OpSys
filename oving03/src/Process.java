@@ -131,8 +131,9 @@ public class Process implements Constants
 	public long timeUntilIO() {
 		if (this.timeToNextIoOperation == 0) {
 			Random rng = new Random();
-			this.timeToNextIoOperation = (long) (rng.nextDouble() * avgIoInterval * 2);
-			//x*2avg => will vary between 0% and 200% of the avgIoInterval.
+			this.timeToNextIoOperation = (long) (rng.nextDouble() * rng.nextDouble() * avgIoInterval * 2);
+			//xy*2avg => will vary between 0% and 200% of the avgIoInterval.
+			//x and y = [0,1]
 			return this.timeToNextIoOperation;
 		} else {
 			return this.timeToNextIoOperation;
