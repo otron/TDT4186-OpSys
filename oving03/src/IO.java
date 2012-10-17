@@ -34,8 +34,33 @@ public class IO {
 		if (this.ioQueue.isEmpty())
 			return null;
 		this.activeProc = (Process) this.ioQueue.removeNext();
-		gui.setIoActive(this.activeProc);
+		this.gui.setIoActive(this.activeProc);
 		return this.activeProc;
 	}
+	
+	/**
+	 * 
+	 * @param p process to add in the IO Queue
+	 * @return Returns true if the process immediately received I/O control or whatever. False if it didn't. Boo-fucking-hoo.
+	 */
+	public boolean addProcess(Process process) {
+		this.ioQueue.insert(process);
+		if (this.activeProc == null) {
+			this.begin();
+			return true;
+		} else
+			return false;
+	}
+	
+	/**
+	 * grabs the current active process and retracts it access to I/O
+	 * @return returns the current active process.
+	 */
+	public Process getProcess() {
+		Process proc = this.activeProc;
+		this.gui.setIoActive((this.activeProc = null));
+		return proc;
+	}
+	
 
 }
