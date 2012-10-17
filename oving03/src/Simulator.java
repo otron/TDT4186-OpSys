@@ -150,7 +150,7 @@ public class Simulator implements Constants
 	 * Simulates a process switch.
 	 */
 	private void switchProcess() {
-		// Incomplete
+		// Incomplete 
 	}
 
 	/**

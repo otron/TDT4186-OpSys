@@ -45,6 +45,12 @@ public class Process implements Constants
 
 	/** The global time of the last event involving this process */
 	private long timeOfLastEvent;
+	
+	/** The amount of time time (in ms) it takes for this process to start up after being given the CPU */
+	private long startUpTime;
+	
+	/** The time this process ended */
+	private long endTime;
 
 	/**
 	 * Creates a new process with given parameters. Other parameters are randomly
@@ -116,6 +122,88 @@ public class Process implements Constants
 		statistics.totalTimeSpentWaitingForMemory += timeSpentWaitingForMemory;
 		statistics.nofCompletedProcesses++;
 	}
-
 	// Add more methods as needed
+	
+	/**
+	 * 
+	 * @return The time (in ms) until this process will require I/O next.
+	 */
+	public long timeUntilIO() {
+		if (this.timeToNextIoOperation == 0) {
+			Random rng = new Random();
+			this.timeToNextIoOperation = (long) (rng.nextDouble() * avgIoInterval * 2);
+			//x*2avg => will vary between 0% and 200% of the avgIoInterval.
+			return this.timeToNextIoOperation;
+		} else {
+			return this.timeToNextIoOperation;
+		}
+	}
+	/**
+	 * 
+	 * @return How much CPU Time this process requires (in ms)
+	 */
+	public long getCPUTimeNeeded() {
+		return this.cpuTimeNeeded;
+	}
+	
+	/**
+	 * This function is called when the process leaves the CPU.
+	 * @param clock The time when this process leaves the CPU.
+	 */
+	public void leaveCPU(long clock) {
+		this.timeSpentInCpu += clock - this.timeOfLastEvent;
+		this.cpuTimeNeeded -= clock - this.timeOfLastEvent;
+		this.timeToNextIoOperation -= clock - this.timeOfLastEvent;
+		this.endTime = clock;
+		this.updateTimeOfLastEvent(clock);
+	}
+	/**
+	 * Call this method when the process enters the CPU
+	 * @param clock The current time (in ms) (since the simulation began)
+	 */
+	public void enterCPU(long clock) {
+		this.timeSpentInReadyQueue += clock - timeOfLastEvent;
+		this.updateTimeOfLastEvent(clock);
+	}
+	/**
+	 * Call this method when the process enters the CPU queue.
+	 * @param clock The current time (in ms) (since the simulation began)
+	 */
+	public void enterCPUQueue(long clock) {
+		this.nofTimesInIoQueue++;
+		this.updateTimeOfLastEvent(clock);
+	}
+	/**
+	 * This method is called when the process gets to grab some IO, /yeah/ 
+	 * @param clock The current time (in ms) (since the simulation began)
+	 */
+	public void enterIO(long clock) {
+		this.timeSpentWaitingForIo += clock - timeOfLastEvent;
+		this.updateTimeOfLastEvent(clock);
+	}
+	/**
+	 * This method is called when the process is torn away from the I/O
+	 * @param clock The current time (in ms) (since the simulation began)
+	 */
+	public void leavesIO(long clock) {
+		this.timeSpentInIo += clock - timeOfLastEvent;
+		this.updateTimeOfLastEvent(clock);
+	}
+	/**
+	 * This method is called when the process enters the IO queue
+	 * @param clock The current time (in ms) (since the simulation began)
+	 */
+	public void enterIOQueue(long clock) {
+		this.nofTimesInIoQueue++;
+		this.timeSpentInReadyQueue += clock - timeOfLastEvent;
+		this.updateTimeOfLastEvent(clock);
+	}
+	/**
+	 * this method saves us two lines of code in a lot of methods so yeah
+	 * @param clock The current time (in ms) (since the simulation began)
+	 */
+	private void updateTimeOfLastEvent(long clock) {
+		this.timeOfLastEvent = clock;
+		notifyAll();
+	}
 }
