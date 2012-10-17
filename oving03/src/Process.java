@@ -44,6 +44,9 @@ public class Process implements Constants
 	private long nofTimesInIoQueue = 0;
 
 	/** The global time of the last event involving this process */
+	
+	
+	
 	private long timeOfLastEvent;
 
 	/**
@@ -116,6 +119,30 @@ public class Process implements Constants
 		statistics.totalTimeSpentWaitingForMemory += timeSpentWaitingForMemory;
 		statistics.nofCompletedProcesses++;
 	}
-
 	// Add more methods as needed
+	
+	/**
+	 * 
+	 * @return The time (in ms) until this process will require I/O next.
+	 */
+	public long timeUntilIO() {
+		if (this.timeToNextIoOperation == 0) {
+			Random rng = new Random();
+			this.timeToNextIoOperation = (long) (rng.nextDouble() * avgIoInterval * 2);
+			//x*2avg => will vary between 0% and 200% of the avgIoInterval.
+			return this.timeToNextIoOperation;
+		} else {
+			return this.timeToNextIoOperation;
+		}
+	}
+	/**
+	 * 
+	 * @return How much CPU Time this process requires (in ms)
+	 */
+	public long getCPUTimeNeeded() {
+		return this.cpuTimeNeeded;
+	}
+	
+	
+	
 }
