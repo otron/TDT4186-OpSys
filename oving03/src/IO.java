@@ -14,6 +14,7 @@ public class IO {
 	/** the time to wait (in ms) until the I/O becomes available */
 	private long avgioWait;
 	private long ioWait;
+	private long queueTime;
 	
 	/**
 	 * This is the constructooorrrr. It ain't nuthin' fancy.
@@ -27,6 +28,7 @@ public class IO {
 		this.gui = gui;
 		this.ioQueue = IOQueue;
 		this.ioWait = avgIOWait;
+		this.queueTime = 0;
 	}
 	
 	/**
@@ -77,8 +79,16 @@ public class IO {
 			return ioWait;
 	}
 	
-	public void updateTime(long time) {
-		// TO-DO: wait until statistics.java is done
+	/**
+	 * updates the longest queue time in statistics if the current queue length is longer than the longest previously recorded.
+	 * @param time the time that has passed
+	 */
+	public void updateQueueTime(long time) {
+		long l = this.ioQueue.getQueueLength();
+		this.queueTime += l * time;
+		if (l > stats.largestOccuringIOQueueLength) {
+			stats.largestOccuringIOQueueLength = l;
+		}
 	}
 
 }
