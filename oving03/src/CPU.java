@@ -5,10 +5,10 @@ public class CPU {
 	Statistics statistics;
 	Process active;
 	Gui graphcs;
-	int max;
+	long max;
 	
 	// Konstrukt¿r med argumenter
-	public CPU (Queue queue, int max, Statistics statistics, Gui gui) {
+	public CPU (Queue queue, long max, Statistics statistics, Gui gui) {
 		this.queue = queue;
 		this.statistics = statistics;
 		this.graphcs = gui;
@@ -30,7 +30,7 @@ public class CPU {
 		return p;
 	}
 	
-	public int getMax() {
+	public long getMax() {
 		return max;
 	}
 	
