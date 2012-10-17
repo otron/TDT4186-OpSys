@@ -7,7 +7,7 @@ public class CPU {
 	Gui graphcs;
 	long max;
 	
-	// Konstrukt¿r med argumenter
+	// Konstruktoor med argumenter
 	public CPU (Queue queue, long max, Statistics statistics, Gui gui) {
 		this.queue = queue;
 		this.statistics = statistics;

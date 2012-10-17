@@ -32,12 +32,12 @@ public class Statistics
 	public long largestOccuringCPUQueueLength = 0;
 	public long averageCPUQueueLength = 0;
 	public long largestOccuringIOQueueLength = 0;
-	// Litt usikker om disse tre må være med
+	// Litt usikker om disse tre maa vaere med
 	public long averageNumberOfTimesAPreocessHasBeenPlacedInMemoryQueue = 0;
 	public long averageNumberOfTimesAPrecoessHasBeenPLacedInCPUQueue = 0;
 	public long averageNumberOfTimesAProcessHasBeenPlacedInIOQueue = 0;
 	
-	// Usikker på disse også
+	// Usikker på disse ogsaa
 	public long averageTimeSpentInSystemPerProcess = 0;
 	public long averageTimeSpentWaitingForMemoryPerPRocess = 0;
 	public long averageTimeSpentWaitingForCPUPerProcess = 0;
