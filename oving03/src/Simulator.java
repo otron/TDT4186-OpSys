@@ -11,8 +11,6 @@ public class Simulator implements Constants
     private Memory memory;
 	/** Reference to the GUI interface */
 	private Gui gui;
-	/** REFERENCE TO THE CPU-THING */
-	private CPU cpu;
 	/** Reference to the statistics collector */
 	private Statistics statistics;
 	/** The global clock */
@@ -22,6 +20,10 @@ public class Simulator implements Constants
 	/** The average length between process arrivals */
 	private long avgArrivalInterval;
 	// Add member variables as needed
+	/** REFERENCE TO THE CPU-THING */
+	private CPU cpu;
+	/** get some I/O mm yeah sex joke */
+	private IO io;
 
 	/**
 	 * Constructs a scheduling simulator with the given parameters.
@@ -45,7 +47,10 @@ public class Simulator implements Constants
 		memory = new Memory(memoryQueue, memorySize, statistics);
 		clock = 0;
 		// Add code as needed
+		//initialize dat cpu yo
 		this.cpu = new CPU(cpuQueue, maxCpuTime, this.statistics, this.gui);
+		//wat up IOOOO
+		this.io = new IO(this.statistics, this.gui, ioQueue, avgIoTime);
     }
 
     /**
@@ -134,7 +139,16 @@ public class Simulator implements Constants
 		while(p != null) {
 			
 			// TODO: Add this process to the CPU queue!
+			this.cpu.insertProcessInQueue(p);
+			// Process inserted into CPU-queue.
+			// IS THE CPU IDLING???
+			if (this.cpu.isIdle())
+				this.switchProcess(); //WELL IT SHOULDN'T BE
 			// Also add new events to the event queue if needed
+			//????
+			
+			//TODO: Figure out what to do here
+			
 
 			// Since we haven't implemented the CPU and I/O device yet,
 			// we let the process leave the system immediately, for now.
@@ -153,6 +167,7 @@ public class Simulator implements Constants
 	 * Simulates a process switch.
 	 */
 	private void switchProcess() {
+		//this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, this.clock));
 		// Incomplete 
 	}
 
