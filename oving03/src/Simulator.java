@@ -167,6 +167,13 @@ public class Simulator implements Constants
 	 * Simulates a process switch.
 	 */
 	private void switchProcess() {
+		Process currentProc = cpu.getActive();
+		if (currentProc != null) {
+			currentProc.leaveCPU(clock);
+			this.cpu.insertProcessInQueue(currentProc);
+			//this.statistics.no
+		}
+			
 		//this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, this.clock));
 		// Incomplete 
 	}
