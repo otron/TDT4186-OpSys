@@ -11,6 +11,8 @@ public class Simulator implements Constants
     private Memory memory;
 	/** Reference to the GUI interface */
 	private Gui gui;
+	/** REFERENCE TO THE CPU-THING */
+	private CPU cpu;
 	/** Reference to the statistics collector */
 	private Statistics statistics;
 	/** The global clock */
@@ -43,6 +45,7 @@ public class Simulator implements Constants
 		memory = new Memory(memoryQueue, memorySize, statistics);
 		clock = 0;
 		// Add code as needed
+		this.cpu = new CPU(cpuQueue, maxCpuTime, this.statistics, this.gui);
     }
 
     /**

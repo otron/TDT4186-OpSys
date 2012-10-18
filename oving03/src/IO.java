@@ -11,9 +11,7 @@ public class IO {
 	private Queue ioQueue;
 	/** The process which currently has right of I/O */
 	private Process activeProc = null;
-	/** the time to wait (in ms) until the I/O becomes available */
-	private long avgioWait;
-	private long ioWait;
+	private long avgIOTime;
 	private long queueTime;
 	
 	/**
@@ -23,11 +21,11 @@ public class IO {
 	 * @param IOQueue
 	 * @param avgIOWait
 	 */
-	public IO(Statistics statistics, Gui gui, Queue IOQueue, long avgIOWait) {
+	public IO(Statistics statistics, Gui gui, Queue IOQueue, long avgIOTime) {
 		this.stats = statistics;
 		this.gui = gui;
 		this.ioQueue = IOQueue;
-		this.ioWait = avgIOWait;
+		this.avgIOTime = avgIOTime;
 		this.queueTime = 0;
 	}
 	
@@ -71,12 +69,8 @@ public class IO {
 	 * @return the time (in ms) until the IO becomes available.
 	 */
 	public long getIOTime() {
-		if (this.ioWait <= 0) {
-			Random rng = new Random();
-			this.ioWait = (long) (rng.nextDouble() * rng.nextDouble() * 2 * avgioWait);
-			return this.ioWait;
-		} else
-			return ioWait;
+		Random rng = new Random();
+		return (long) (rng.nextDouble() * rng.nextDouble() * avgIOTime * 2);
 	}
 	
 	/**
