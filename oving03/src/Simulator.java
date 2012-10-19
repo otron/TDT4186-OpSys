@@ -171,7 +171,7 @@ public class Simulator implements Constants
 			// Try to use the freed memory:
 			flushMemoryQueue();
 			// Update statistics
-			p.updateStatistics(statistics);
+			//p.updateStatistics(statistics);
 
 			// Check for more free memory
 			p = memory.checkMemory(clock);

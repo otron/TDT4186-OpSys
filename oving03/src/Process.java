@@ -119,8 +119,14 @@ public class Process implements Constants
      * @param statistics	The Statistics object to be updated.
      */
 	public void updateStatistics(Statistics statistics) {
-		statistics.totalTimeSpentWaitingForMemory += timeSpentWaitingForMemory;
+		statistics.totalTimeSpentWaitingForMemory += this.timeSpentWaitingForMemory;
 		statistics.nofCompletedProcesses++;
+		statistics.totalTimeInReadyQueue += this.timeSpentInReadyQueue;
+		statistics.totalCPUTimeSpentProcessing += this.timeSpentInCpu;
+        statistics.totalTimeWaitingForIO += this.timeSpentWaitingForIo;
+        statistics.totalOTime += this.timeSpentInIo;
+        statistics.totalNofTimesInReadyQueue += this.nofTimesInReadyQueue;
+        statistics.totalNofTimesInIOQueue += this.nofTimesInIoQueue;
 	}
 	// Add more methods as needed
 	
