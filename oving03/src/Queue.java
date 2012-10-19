@@ -93,7 +93,7 @@ public class Queue extends JPanel implements Constants {
 			g.setColor(Color.black);
 			g.drawString(heading, w/2-fm.stringWidth(heading)/2, 15);
 			for(int i = 0; i < maxVisibleLength; i++) {
-				if(i < content.size()) {
+				if(content != null && i < content.size()) {
 					Process p = (Process)content.get(i);
 					p.draw(g, w-(i+1)*w/(maxVisibleLength+1), 20, w/(maxVisibleLength+1), h-20);
 				}
@@ -111,8 +111,14 @@ public class Queue extends JPanel implements Constants {
 			g.setColor(Color.black);
 			g.drawString(heading, w/2-fm.stringWidth(heading)/2, 15);
 			for(int i = 0; i < maxVisibleLength; i++) {
-				if(i < content.size()) {
-					Process p = (Process)content.get(i);
+//				System.out.println("content!=null?"+(content!=null));
+//				System.out.println("i<content.size()?"+(i<content.size()));
+//				System.out.println("content.size()>0?"+(content.size()>0));
+//				System.out.println("i!=content.size()?"+(i!=content.size()));
+//				System.out.println((content != null && i < content.size() && content.size() > 0 && i != content.size()));
+				if(content.size() > i) {
+					//System.out.println("checkit:::"+i+"??"+content.size());
+					Process p = (Process) content.get(i);
 					p.draw(g, i*w/(maxVisibleLength+1), 20, w/(maxVisibleLength+1), h-20);
 				}
 				else {
