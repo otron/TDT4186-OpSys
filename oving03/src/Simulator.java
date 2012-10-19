@@ -190,6 +190,7 @@ public class Simulator implements Constants
 	private void endProcess() {
 		Process proc = this.cpu.getActive();
 		if (proc != null) { //is there no process active? Unsure if this will ever happen but hey NPE's are for chumps.
+			this.statistics.nofCompletedProcesses++;
 			proc.leaveCPU(clock); //make it leave the CPU. CAST IT AWAY.
 			proc.updateStatistics(this.statistics);
 			proc.updateStatsForClosureOfEmotionalRelations(this.statistics);
@@ -204,13 +205,14 @@ public class Simulator implements Constants
 	 */
 	private void processIoRequest() {
 		this.statistics.numberOFProcessedIOOperations++;
+		this.eventQueue.insertEvent(new Event(Constants.IO_REQUEST, clock));
 		Process proc = this.cpu.getActive();
 		if (proc != null) {
 			proc.leaveCPU(clock);
 			proc.enterIOQueue(clock);
 			if (this.io.addProcess(proc)) {
 				proc.enterIO(clock);
-				this.eventQueue.insertEvent(new Event(Constants.END_IO, clock + io.getIOTime())); //this should work... 
+				this.eventQueue.insertEvent(new Event(Constants.END_IO, clock + io.getIOTime())); //this should work...
 			}
 			switchProcess();
 		}
@@ -221,8 +223,24 @@ public class Simulator implements Constants
 	 * is done with its I/O operation.
 	 */
 	private void endIoOperation() {
-		// Incomplete
+		Process proc = this.io.getProcess();
+		if (proc != null) {
+			this.statistics.numberOFProcessedIOOperations++;
+			proc.leavesIO(clock);
+			this.eventQueue.insertEvent(new Event(Constants.END_IO, clock + io.getIOTime()));
+			this.cpu.insertProcessInQueue(proc);
+			proc.enterCPUQueue(clock);
+			
+			if (this.cpu.isIdle())
+				switchProcess(); //ain't got no time for idlin', boy.
+			
+			proc = this.io.begin();
+			if (proc != null) {
+				proc.enterIO(clock);
+			}
+		}
 	}
+	
 
 	/**
 	 * Reads a number from the an input reader.
