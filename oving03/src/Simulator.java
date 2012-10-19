@@ -70,6 +70,7 @@ public class Simulator implements Constants
 			Event event = eventQueue.getNextEvent();
 			// Find out how much time that passed...
 			long timeDifference = event.getTime()-clock;
+			System.out.println("Clock:"+clock+"::"+eventQueue.isEmpty()+"::"+timeDifference);
 			// ...and update the clock.
 			clock = event.getTime();
 			// Let the memory unit and the GUI know that time has passed
@@ -144,8 +145,9 @@ public class Simulator implements Constants
 			this.cpu.insertProcessInQueue(p);
 			// Process inserted into CPU-queue.
 			// IS THE CPU IDLING???
-			if (this.cpu.isIdle())
+			if (this.cpu.isIdle()) {
 				this.switchProcess(); //WELL IT SHOULDN'T BE
+			}
 			// Also add new events to the event queue if needed
 			//????
 			
@@ -155,6 +157,7 @@ public class Simulator implements Constants
 			// Since we haven't implemented the CPU and I/O device yet,
 			// we let the process leave the system immediately, for now.
 			memory.processCompleted(p);
+			
 			// Try to use the freed memory:
 			flushMemoryQueue();
 			// Update statistics
@@ -180,9 +183,16 @@ public class Simulator implements Constants
 		Process proc = this.cpu.start();
 		if (proc != null) {
 			proc.enterCPU(clock);
+			if (proc.timeUntilIO() > this.cpu.getMax() && proc.getCPUTimeNeeded() > this.cpu.getMax())
+				this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, clock + this.cpu.getMax()));
+			else if (proc.timeUntilIO() > proc.getCPUTimeNeeded())
+				this.eventQueue.insertEvent(new Event(END_PROCESS, clock + proc.getCPUTimeNeeded()));
+			else
+				this.eventQueue.insertEvent(new Event(IO_REQUEST, clock + proc.timeUntilIO()));
+			
 		}
 		//register this event as having happened yo yo yo
-		this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, this.clock));
+		//this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, this.clock));
 		// Incomplete OR IS IT???? 
 	}
 
@@ -197,7 +207,6 @@ public class Simulator implements Constants
 			proc.updateStatistics(this.statistics);
 			proc.updateStatsForClosureOfEmotionalRelations(this.statistics);
 			this.memory.processCompleted(proc); //free up that memory
-			this.eventQueue.insertEvent(new Event(Constants.END_PROCESS, clock));
 		}
 	}
 
