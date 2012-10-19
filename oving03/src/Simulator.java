@@ -216,7 +216,7 @@ public class Simulator implements Constants
 	 */
 	private void processIoRequest() {
 		this.statistics.numberOFProcessedIOOperations++;
-		this.eventQueue.insertEvent(new Event(Constants.IO_REQUEST, clock));
+		//this.eventQueue.insertEvent(new Event(Constants.IO_REQUEST, clock));
 		Process proc = this.cpu.getActive();
 		if (proc != null) {
 			proc.leaveCPU(clock);
@@ -238,7 +238,6 @@ public class Simulator implements Constants
 		if (proc != null) {
 			this.statistics.numberOFProcessedIOOperations++;
 			proc.leavesIO(clock);
-			this.eventQueue.insertEvent(new Event(Constants.END_IO, clock + io.getIOTime()));
 			this.cpu.insertProcessInQueue(proc);
 			proc.enterCPUQueue(clock);
 			
@@ -248,6 +247,7 @@ public class Simulator implements Constants
 			proc = this.io.begin();
 			if (proc != null) {
 				proc.enterIO(clock);
+				this.eventQueue.insertEvent(new Event(Constants.END_IO, clock + io.getIOTime()));
 			}
 		}
 	}
