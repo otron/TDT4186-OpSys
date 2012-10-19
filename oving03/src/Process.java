@@ -167,7 +167,7 @@ public class Process implements Constants
 	 * Call this method when the process enters the CPU
 	 * @param clock The current time (in ms) (since the simulation began)
 	 */
-	public void enterCPU(long clock) {
+	public synchronized void enterCPU(long clock) {
 		this.timeSpentInReadyQueue += clock - timeOfLastEvent;
 		this.updateTimeOfLastEvent(clock);
 	}
@@ -175,7 +175,7 @@ public class Process implements Constants
 	 * Call this method when the process enters the CPU queue.
 	 * @param clock The current time (in ms) (since the simulation began)
 	 */
-	public void enterCPUQueue(long clock) {
+	public synchronized void enterCPUQueue(long clock) {
 		this.nofTimesInIoQueue++;
 		this.updateTimeOfLastEvent(clock);
 	}
@@ -183,7 +183,7 @@ public class Process implements Constants
 	 * This method is called when the process gets to grab some IO, /yeah/ 
 	 * @param clock The current time (in ms) (since the simulation began)
 	 */
-	public void enterIO(long clock) {
+	public synchronized void enterIO(long clock) {
 		this.timeSpentWaitingForIo += clock - timeOfLastEvent;
 		this.updateTimeOfLastEvent(clock);
 	}
@@ -191,15 +191,16 @@ public class Process implements Constants
 	 * This method is called when the process is torn away from the I/O
 	 * @param clock The current time (in ms) (since the simulation began)
 	 */
-	public void leavesIO(long clock) {
+	public synchronized void leavesIO(long clock) {
 		this.timeSpentInIo += clock - timeOfLastEvent;
 		this.updateTimeOfLastEvent(clock);
+		this.timeToNextIoOperation = this.timeUntilIO();
 	}
 	/**
 	 * This method is called when the process enters the IO queue
 	 * @param clock The current time (in ms) (since the simulation began)
 	 */
-	public void enterIOQueue(long clock) {
+	public synchronized void enterIOQueue(long clock) {
 		this.nofTimesInIoQueue++;
 		this.timeSpentInReadyQueue += clock - timeOfLastEvent;
 		this.updateTimeOfLastEvent(clock);
@@ -208,7 +209,7 @@ public class Process implements Constants
 	 * this method saves us two lines of code in a lot of methods so yeah
 	 * @param clock The current time (in ms) (since the simulation began)
 	 */
-	private void updateTimeOfLastEvent(long clock) {
+	private synchronized void updateTimeOfLastEvent(long clock) {
 		this.timeOfLastEvent = clock;
 		notifyAll();
 	}
