@@ -184,7 +184,8 @@ public class Process implements Constants
 	 * @param clock The current time (in ms) (since the simulation began)
 	 */
 	public synchronized void enterCPUQueue(long clock) {
-		this.nofTimesInIoQueue++;
+		//this.nofTimesInIoQueue++;
+		this.nofTimesInReadyQueue++;
 		this.timeOfLastEvent = clock;
 		notifyAll();
 	}
