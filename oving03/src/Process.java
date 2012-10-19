@@ -124,8 +124,9 @@ public class Process implements Constants
 	}
 	// Add more methods as needed
 	
-	public void updateStatsForClosureOfEmotionalRelations() {
-		
+	public void updateStatsForClosureOfEmotionalRelations(Statistics statsYo) {
+		statsYo.totalSystemTime += this.endTime - this.startUpTime;
+		//This is mathematically sound, trust me.
 	}
 	
 	/**
