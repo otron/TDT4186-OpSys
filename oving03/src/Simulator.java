@@ -169,10 +169,13 @@ public class Simulator implements Constants
 	private void switchProcess() {
 		Process currentProc = cpu.getActive();
 		if (currentProc != null) {
+			//ooh we are forcing the process to switch what fun!
 			currentProc.leaveCPU(clock);
+			this.statistics.numberOFForcedProcessSwitches++;
 			this.cpu.insertProcessInQueue(currentProc);
-			//this.statistics.no
+			currentProc.enterCPUQueue(clock);
 		}
+		currentProc = this.cpu.start();
 			
 		//this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, this.clock));
 		// Incomplete 
