@@ -124,6 +124,10 @@ public class Process implements Constants
 	}
 	// Add more methods as needed
 	
+	public void updateStatsForClosureOfEmotionalRelations() {
+		
+	}
+	
 	/**
 	 * 
 	 * @return The time (in ms) until this process will require I/O next.

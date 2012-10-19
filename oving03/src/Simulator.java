@@ -175,16 +175,28 @@ public class Simulator implements Constants
 			this.cpu.insertProcessInQueue(currentProc);
 			currentProc.enterCPUQueue(clock);
 		}
-		currentProc = this.cpu.start();
-			
-		//this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, this.clock));
-		// Incomplete 
+		Process proc = this.cpu.start();
+		if (proc != null) {
+			proc.enterCPU(clock);
+		}
+		//register this event as having happened yo yo yo
+		this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, this.clock));
+		// Incomplete OR IS IT???? 
 	}
 
 	/**
 	 * Ends the active process, and deallocates any resources allocated to it.
 	 */
 	private void endProcess() {
+		Process proc = this.cpu.getActive();
+		if (proc != null) { //is there no process active? Unsure if this will ever happen but hey NPE's are for chumps.
+			proc.leaveCPU(clock);
+			proc.updateStatistics(statistics);
+			this.statistics.totalSystemTime += 
+			stats.totalSystemTime += (this.endTime - this.startUpTime);
+			
+		}
+		
 		// Incomplete
 	}
 
