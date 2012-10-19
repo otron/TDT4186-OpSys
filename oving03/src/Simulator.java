@@ -60,6 +60,17 @@ public class Simulator implements Constants
 	 */
 	public void simulate() {
 		// TODO: You may want to extend this method somewhat.
+		
+		/**
+		 * checkit we got comments	
+		 * Alright hold up now.
+		 * What'cha all mean 'bout "experimenting with the Round Robin algorithm"? Shit nigger that all-gor-rythm is defined in a book somewhere, probably.
+		 * Y'all be meanin' to say "changing about the value of the parameters of the algorithm?"
+		 * 'Cause I see that as two sort-o' different things.
+		 * 
+		 * Anyway lemme just go on about assuming y'all be meanin' we be s'posed to mix up those values.
+		 * Which is basically just the length of the CPU-time-quantum alloted to each process.
+		 */
 
 		System.out.print("Simulating...");
 		// Genererate the first process arrival event
