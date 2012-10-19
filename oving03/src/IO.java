@@ -79,10 +79,9 @@ public class IO {
 	 */
 	public void updateQueueTime(long time) {
 		long l = this.ioQueue.getQueueLength();
-		this.queueTime += l * time;
+		this.stats.ioQueueLengthTime += l * time;
 		if (l > stats.largestOccuringIOQueueLength) {
 			stats.largestOccuringIOQueueLength = l;
 		}
 	}
-
 }

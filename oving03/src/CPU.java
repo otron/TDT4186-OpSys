@@ -50,7 +50,7 @@ public class CPU {
 	}
 	
 	
-	public void updateTime (int timePassed) {
+	public void updateTime (long timePassed) {
 		this.statistics.totalCPUTimeSpentWaiting += this.queue.getQueueLength() * timePassed; 
 		if (this.queue.getQueueLength() > this.statistics.largestOccuringCPUQueueLength)
 			this.statistics.largestOccuringCPUQueueLength = this.queue.getQueueLength();

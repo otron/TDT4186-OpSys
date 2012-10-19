@@ -99,7 +99,7 @@ public class Process implements Constants
 	 * enters the cpu queue).
      * @param clock The time when the process leaves the memory queue.
      */
-    public void leftMemoryQueue(long clock) {
+    public synchronized void leftMemoryQueue(long clock) {
 		  timeSpentWaitingForMemory += clock - timeOfLastEvent;
 		  timeOfLastEvent = clock;
     }
@@ -133,7 +133,7 @@ public class Process implements Constants
 	 * 
 	 * @return The time (in ms) until this process will require I/O next.
 	 */
-	public long timeUntilIO() {
+	public synchronized long timeUntilIO() {
 		if (this.timeToNextIoOperation == 0) {
 			Random rng = new Random();
 			this.timeToNextIoOperation = (long) (rng.nextDouble() * rng.nextDouble() * avgIoInterval * 2);
@@ -156,12 +156,13 @@ public class Process implements Constants
 	 * This function is called when the process leaves the CPU.
 	 * @param clock The time when this process leaves the CPU.
 	 */
-	public void leaveCPU(long clock) {
+	public synchronized void leaveCPU(long clock) {
 		this.timeSpentInCpu += clock - this.timeOfLastEvent;
 		this.cpuTimeNeeded -= clock - this.timeOfLastEvent;
 		this.timeToNextIoOperation -= clock - this.timeOfLastEvent;
 		this.endTime = clock;
-		this.updateTimeOfLastEvent(clock);
+		this.timeOfLastEvent = clock;
+		notifyAll();
 	}
 	/**
 	 * Call this method when the process enters the CPU
@@ -169,7 +170,8 @@ public class Process implements Constants
 	 */
 	public synchronized void enterCPU(long clock) {
 		this.timeSpentInReadyQueue += clock - timeOfLastEvent;
-		this.updateTimeOfLastEvent(clock);
+		this.timeOfLastEvent = clock;
+		notifyAll();
 	}
 	/**
 	 * Call this method when the process enters the CPU queue.
@@ -177,7 +179,8 @@ public class Process implements Constants
 	 */
 	public synchronized void enterCPUQueue(long clock) {
 		this.nofTimesInIoQueue++;
-		this.updateTimeOfLastEvent(clock);
+		this.timeOfLastEvent = clock;
+		notifyAll();
 	}
 	/**
 	 * This method is called when the process gets to grab some IO, /yeah/ 
@@ -185,7 +188,8 @@ public class Process implements Constants
 	 */
 	public synchronized void enterIO(long clock) {
 		this.timeSpentWaitingForIo += clock - timeOfLastEvent;
-		this.updateTimeOfLastEvent(clock);
+		this.timeOfLastEvent = clock;
+		notifyAll();
 	}
 	/**
 	 * This method is called when the process is torn away from the I/O
@@ -193,8 +197,9 @@ public class Process implements Constants
 	 */
 	public synchronized void leavesIO(long clock) {
 		this.timeSpentInIo += clock - timeOfLastEvent;
-		this.updateTimeOfLastEvent(clock);
 		this.timeToNextIoOperation = this.timeUntilIO();
+		this.timeOfLastEvent = clock;
+		notifyAll();
 	}
 	/**
 	 * This method is called when the process enters the IO queue
@@ -203,7 +208,8 @@ public class Process implements Constants
 	public synchronized void enterIOQueue(long clock) {
 		this.nofTimesInIoQueue++;
 		this.timeSpentInReadyQueue += clock - timeOfLastEvent;
-		this.updateTimeOfLastEvent(clock);
+		this.timeOfLastEvent = clock;
+		notifyAll();
 	}
 	/**
 	 * this method saves us two lines of code in a lot of methods so yeah

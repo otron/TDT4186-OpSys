@@ -75,6 +75,8 @@ public class Simulator implements Constants
 			// Let the memory unit and the GUI know that time has passed
 			memory.timePassed(timeDifference);
 			gui.timePassed(timeDifference);
+			io.updateQueueTime(timeDifference);
+			cpu.updateTime(timeDifference);
 			// Deal with the event
 			if (clock < simulationLength) {
 				processEvent(event);
