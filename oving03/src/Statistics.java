@@ -72,11 +72,11 @@ public class Statistics
 			System.out.println();
 			
 			System.out.println("Average time spent in system per process:                     " + (float) totalSystemTime / nofCompletedProcesses);
-			System.out.println("Average time spent waiting for memory per process:            " + totalTimeSpentWaitingForMemory/nofCompletedProcesses+" ms");
-			System.out.println("Average time spent waiting for cpu per process:               " + totalTimeInReadyQueue / nofCompletedProcesses + " ms");
-			System.out.println("Average time spent processing per process:                    " + totalCPUTimeSpentProcessing / nofCompletedProcesses + " ms");
-			System.out.println("Average time spent waiting for I/O per process:               " + totalTimeWaitingForIO / nofCompletedProcesses + " ms");
-			System.out.println("Average time spent in I/O per process:                        " + totalOTime / nofCompletedProcesses + " ms");
+			System.out.println("Average time spent waiting for memory per process:            " + (float) totalTimeSpentWaitingForMemory/nofCompletedProcesses+" ms");
+			System.out.println("Average time spent waiting for cpu per process:               " + (float) totalTimeInReadyQueue / nofCompletedProcesses + " ms");
+			System.out.println("Average time spent processing per process:                    " + (float) totalCPUTimeSpentProcessing / nofCompletedProcesses + " ms");
+			System.out.println("Average time spent waiting for I/O per process:               " + (float) totalTimeWaitingForIO / nofCompletedProcesses + " ms");
+			System.out.println("Average time spent in I/O per process:                        " + (float) totalOTime / nofCompletedProcesses + " ms");
 			
 			
 			

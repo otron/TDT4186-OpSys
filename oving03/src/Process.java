@@ -121,6 +121,12 @@ public class Process implements Constants
 	public void updateStatistics(Statistics statistics) {
 		statistics.totalTimeSpentWaitingForMemory += timeSpentWaitingForMemory;
 		statistics.nofCompletedProcesses++;
+		statistics.totalTimeInReadyQueue += timeSpentInReadyQueue;
+		statistics.totalCPUTimeSpentProcessing += this.timeSpentInCpu;
+        statistics.totalTimeWaitingForIO += timeSpentWaitingForIo;
+        statistics.totalOTime += timeSpentInIo;
+        statistics.totalNofTimesInReadyQueue += nofTimesInReadyQueue;
+        statistics.totalNofTimesInIOQueue += nofTimesInIoQueue;
 	}
 	// Add more methods as needed
 	
