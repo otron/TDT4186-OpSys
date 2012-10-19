@@ -9,3 +9,6 @@ oving3.zip
 
 # Compiled source #
 *.class
+
+# Mac stuff #
+oving03/src/.DS_Store
