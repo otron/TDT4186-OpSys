@@ -70,7 +70,7 @@ public class Simulator implements Constants
 			Event event = eventQueue.getNextEvent();
 			// Find out how much time that passed...
 			long timeDifference = event.getTime()-clock;
-			System.out.println("Clock:"+clock+"::"+eventQueue.isEmpty()+"::"+timeDifference);
+			//System.out.println("Clock:"+clock+"::"+eventQueue.isEmpty()+"::"+timeDifference);
 			// ...and update the clock.
 			clock = event.getTime();
 			// Let the memory unit and the GUI know that time has passed
@@ -154,9 +154,8 @@ public class Simulator implements Constants
 			//TODO: Figure out what to do here
 			
 
-			// Since we haven't implemented the CPU and I/O device yet,
-			// we let the process leave the system immediately, for now.
-			memory.processCompleted(p);
+			// Since we have implemented the CPU and I/O, we're going to leave this commented out as we have no idea what we are doing. 
+			//memory.processCompleted(p);
 			
 			// Try to use the freed memory:
 			flushMemoryQueue();
