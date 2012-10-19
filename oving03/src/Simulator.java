@@ -190,13 +190,12 @@ public class Simulator implements Constants
 	private void endProcess() {
 		Process proc = this.cpu.getActive();
 		if (proc != null) { //is there no process active? Unsure if this will ever happen but hey NPE's are for chumps.
-			proc.leaveCPU(clock);
+			proc.leaveCPU(clock); //make it leave the CPU. CAST IT AWAY.
 			proc.updateStatistics(this.statistics);
 			proc.updateStatsForClosureOfEmotionalRelations(this.statistics);
-			this.memory.processCompleted(proc);
+			this.memory.processCompleted(proc); //free up that memory
+			this.eventQueue.insertEvent(new Event(Constants.END_PROCESS, clock));
 		}
-		
-		// Incomplete
 	}
 
 	/**
@@ -204,7 +203,17 @@ public class Simulator implements Constants
 	 * perform an I/O operation.
 	 */
 	private void processIoRequest() {
-		// Incomplete
+		this.statistics.numberOFProcessedIOOperations++;
+		Process proc = this.cpu.getActive();
+		if (proc != null) {
+			proc.leaveCPU(clock);
+			proc.enterIOQueue(clock);
+			if (this.io.addProcess(proc)) {
+				proc.enterIO(clock);
+				this.eventQueue.insertEvent(new Event(Constants.END_IO, clock + io.getIOTime())); //this should work... 
+			}
+			switchProcess();
+		}
 	}
 
 	/**
