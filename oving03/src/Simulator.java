@@ -60,6 +60,17 @@ public class Simulator implements Constants
 	 */
 	public void simulate() {
 		// TODO: You may want to extend this method somewhat.
+		
+		/**
+		 * checkit we got comments	
+		 * Alright hold up now.
+		 * What'cha all mean 'bout "experimenting with the Round Robin algorithm"? Shit nigger that all-gor-rythm is defined in a book somewhere, probably.
+		 * Y'all be meanin' to say "changing about the value of the parameters of the algorithm?"
+		 * 'Cause I see that as two sort-o' different things.
+		 * 
+		 * Anyway lemme just go on about assuming y'all be meanin' we be s'posed to mix up those values.
+		 * Which is basically just the length of the CPU-time-quantum alloted to each process.
+		 */
 
 		System.out.print("Simulating...");
 		// Genererate the first process arrival event
@@ -150,17 +161,13 @@ public class Simulator implements Constants
 			}
 			// Also add new events to the event queue if needed
 			//????
-			
-			//TODO: Figure out what to do here
-			
-
 			// Since we have implemented the CPU and I/O, we're going to leave this commented out as we have no idea what we are doing. 
 			//memory.processCompleted(p);
 			
 			// Try to use the freed memory:
 			flushMemoryQueue();
 			// Update statistics
-			//p.updateStatistics(statistics);
+			// This is done when a process is ended (or ends, whichever is more correct, y'know grammatically. or whatevs)
 
 			// Check for more free memory
 			p = memory.checkMemory(clock);
@@ -182,12 +189,22 @@ public class Simulator implements Constants
 		Process proc = this.cpu.start();
 		if (proc != null) {
 			proc.enterCPU(clock);
-			if (proc.timeUntilIO() > this.cpu.getMax() && proc.getCPUTimeNeeded() > this.cpu.getMax())
+			if (proc.timeUntilIO() > this.cpu.getMax() && proc.getCPUTimeNeeded() > this.cpu.getMax()) {
+				//If the time until the process next needs access to IO exceeds the maximum time it is allowed to stay on the CPU
+				//AND
+				//if the process requires the CPU for a longer period of time than the maximum time alloted for each process at a time
+				//then a process switch is scheduled after CPU.max has passed
 				this.eventQueue.insertEvent(new Event(SWITCH_PROCESS, clock + this.cpu.getMax()));
-			else if (proc.timeUntilIO() > proc.getCPUTimeNeeded())
+			}
+			else if (proc.timeUntilIO() > proc.getCPUTimeNeeded()) {
+				//If the process needs less time with the CPU than the time until it next requires IO
+				//then an end process event is scheduled for when the process is done with the CPU
 				this.eventQueue.insertEvent(new Event(END_PROCESS, clock + proc.getCPUTimeNeeded()));
-			else
+			}
+			else {
+				//an IO Request event is scheduled for when the process needs access to IO
 				this.eventQueue.insertEvent(new Event(IO_REQUEST, clock + proc.timeUntilIO()));
+			}
 			
 		}
 		//register this event as having happened yo yo yo
@@ -302,4 +319,19 @@ public class Simulator implements Constants
 
 		SimulationGui gui = new SimulationGui(memorySize, maxCpuTime, avgIoTime, simulationLength, avgArrivalInterval);
 	}
+	
+	/** The discussion/comments regarding variations in the RR-algorithm are found here.
+	 * THINGS THAT COULD BE CHANGED
+	 * The maximum alloted CPU time for a process
+	 * ...
+	 * Aaand that's it.
+	 * I mean, that's all there's to the round-robin algorithm.
+	 * The rest is up to the hardware (I/O processing time (i.e. how long it takes for a keypress to get registered or whatevs), the time it takes for a process switch, and I guess other stuff)
+	 * 
+	 * This max alloted time needs to be sufficiently larger than the time it takes to switch a process, so that we don't end up spending a considerable amount of time just switching between processes.
+	 * Also it needs to not be all that large because then the entire thing basically gets reduced to a FIFO-type-deal.
+	 * Beyond that I guess we could change the system entirely on its head or something but then we wouldn't be using a round robin algorithm now would we?
+	 * 
+	 * 
+	 */
 }

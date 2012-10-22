@@ -59,12 +59,13 @@ public class Process implements Constants
 	 * @param creationTime	The global time when this process is created.
 	 */
 	public Process(long memorySize, long creationTime) {
+		Random rng = new Random();
 		// Memory need varies from 100 kB to 25% of memory size
-		memoryNeeded = 100 + (long)(Math.random()*(memorySize/4-100));
+		memoryNeeded = 100 + (long) (rng.nextDouble() * (memorySize*0.25 - 100));
 		// CPU time needed varies from 100 to 10000 milliseconds
-		cpuTimeNeeded = 100 + (long)(Math.random()*9900);
+		cpuTimeNeeded = 100 + (long)(rng.nextDouble()*9900);
 		// Average interval between I/O requests varies from 1% to 25% of CPU time needed
-		avgIoInterval = (1 + (long)(Math.random()*25))*cpuTimeNeeded/100;
+		avgIoInterval = (1 + (long)(rng.nextDouble()*25))*cpuTimeNeeded/100;
 		// The first and latest event involving this process is its creation
 		timeOfLastEvent = creationTime;
 		// Assign a process ID
@@ -142,9 +143,8 @@ public class Process implements Constants
 	public synchronized long timeUntilIO() {
 		if (this.timeToNextIoOperation == 0) {
 			Random rng = new Random();
-			this.timeToNextIoOperation = (long) (rng.nextDouble() * rng.nextDouble() * avgIoInterval * 2);
-			//xy*2avg => will vary between 0% and 200% of the avgIoInterval.
-			//x and y = [0,1]
+			this.timeToNextIoOperation = (long) (rng.nextDouble() * avgIoInterval * 1.9 + 0.1 * avgIoInterval);
+			//x*2avg => will vary between 10% and 200% of the avgIoInterval, as x is between 0 and 1 (inclusive)
 			return this.timeToNextIoOperation;
 		} else {
 			return this.timeToNextIoOperation;
@@ -184,7 +184,6 @@ public class Process implements Constants
 	 * @param clock The current time (in ms) (since the simulation began)
 	 */
 	public synchronized void enterCPUQueue(long clock) {
-		//this.nofTimesInIoQueue++;
 		this.nofTimesInReadyQueue++;
 		this.timeOfLastEvent = clock;
 		notifyAll();
